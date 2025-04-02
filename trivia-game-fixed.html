@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hip-Hop Head Trivia | TEG-Report.com</title>
+    <style>
+        :root {
+            --primary-color: #ff6b00;
+            --secondary-color: #4a00e0;
+            --text-color: #f5f5f5;
+            --bg-color: #121212;
+            --card-color: #1e1e1e;
+            --correct-color: #00c853;
+            --wrong-color: #ff1744;
+            --teg-brand-color: #e0b400;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .teg-logo {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-weight: bold;
+            background-color: var(--teg-brand-color);
+            color: black;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            color: var(--primary-color);
+            text-shadow: 0 2px 10px rgba(255, 107, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+        
+        .score-board {
+            background-color: rgba(30, 30, 30, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            border: 1px solid var(--secondary-color);
+        }
+        
+        .score-board h2 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: var(--teg-brand-color);
+        }
+        
+        .top-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .score-card {
+            background-color: var(--card-color);
+            padding: 10px 15px;
+            border-radius: 5px;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .score-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .score-value {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+        
+        .game-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .game-screen {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--card-color);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+            border: 2px solid var(--secondary-color);
+        }
+        
+        .game-header {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .game-content {
+            padding: 30px;
+        }
+        
+        /* Start Screen */
+        .game-mode-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .game-mode {
+            background-color: rgba(74, 0, 224, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid var(--secondary-color);
+        }
+        
+        .game-mode:hover {
+            transform: translateY(-5px);
+            background-color: rgba(74, 0, 224, 0.5);
+            box-shadow: 0 5px 15px rgba(74, 0, 224, 0.5);
+        }
+        
+        .game-mode h3 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        /* Category Selection */
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .category {
+            height: 120px;
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            padding: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .category:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        .difficulty-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .difficulty-easy {
+            background-color: #4CAF50;
+            color: black;
+        }
+        
+        .difficulty-medium {
+            background-color: #FFC107;
+            color: black;
+        }
+        
+        .difficulty-hard {
+            background-color: #F44336;
+            color: white;
+        }
+        
+        /* Question Screen */
+        .question-container {
+            text-align: center;
+        }
+        
+        .question-header {
+            margin-bottom: 20px;
+        }
+        
+        .question-category {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .question-number {
+            font-size: 0.9rem;
+            color: var(--teg-brand-color);
+            margin-bottom: 10px;
+        }
+        
+        .question-text {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+        
+        .timer {
+            width: 100%;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background-color: var(--primary-color);
+            border-radius: 5px;
+        }
+        
+        .answers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .answer {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .answer:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .answer.correct {
+            background-color: var(--correct-color);
+            color: black;
+        }
+        
+        .answer.wrong {
+            background-color: var(--wrong-color);
+        }
+        
+        /* Player entry form */
+        .player-form {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(74, 0, 224, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--secondary-color);
+        }
+        
+        .player-form input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+        
+        .player-form button {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .player-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 0, 224, 0.4);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Message box */
+        .message-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .message-box.visible {
+            opacity: 1;
+        }
+        
+        /* Sound control */
+        .sound-control {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid var(--primary-color);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            opacity: 0.7;
+        }
+        
+        /* Question preview screen */
+        #question-preview {
+            text-align: center;
+        }
+        
+        .category-title {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .question-preview-text {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+        
+        .start-button {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 15px 40px;
+            border-radius: 5px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 20px;
+        }
+        
+        .start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(74, 0, 224, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="teg-logo">TEG-REPORT.COM</div>
+            <div class="sound-control" id="sound-toggle">🔊</div>
+            <h1>Hip-Hop Head Trivia</h1>
+            <p class="subtitle">Test your knowledge from Underground to Mainstream (1985-2025)</p>
+        </header>
+        
+        <div class="score-board">
+            <h2>Top Scores</h2>
+            <div class="top-scores" id="top-scores-container">
+                <!-- Sample scores for display -->
+                <div class="score-card">
+                    <div class="score-name">MC Knowitall</div>
+                    <div class="score-value">9,500</div>
+                </div>
+                <div class="score-card">
+                    <div class="score-name">BeatMaster</div>
+                    <div class="score-value">8,750</div>
+                </div>
+                <div class="score-card">
+                    <div class="score-name">LyricGenius</div>
+                    <div class="score-value">8,200</div>
+                </div>
+                <div class="score-card">
+                    <div class="score-name">GoldenEraFan</div>
+                    <div class="score-value">7,950</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="message-box" class="message-box"></div>
+        
+        <div class="game-section">
+            <div class="game-screen">
+                <div class="game-header">
+                    <h2 id="screen-title">Choose Your Game Mode</h2>
+                </div>
+                <div class="game-content">
+                    <div id="player-entry-screen">
+                        <h3 style="margin-bottom: 20px; text-align: center;">Enter Your Name</h3>
+                        <div class="player-form">
+                            <p>Enter your name to begin the game:</p>
+                            <input type="text" id="player-name" placeholder="Your Name">
+                            <button id="start-button">Start Game</button>
+                        </div>
+                    </div>
+                    
+                    <div id="start-screen" class="hidden">
+                        <p>Welcome to Hip-Hop Head Trivia! Test your knowledge of hip-hop culture, artists, and history from 1985 to 2025. Choose a game mode to get started:</p>
+                        
+                        <div class="game-mode-selection">
+                            <div class="game-mode" id="quick-mode">
+                                <h3>Quick Play</h3>
+                                <p>5 questions</p>
+                                <p>Perfect for a quick break</p>
+                            </div>
+                            <div class="game-mode" id="full-mode">
+                                <h3>Full Game</h3>
+                                <p>15 questions</p>
+                                <p>Across all categories</p>
+                            </div>
+                            <div class="game-mode" id="era-mode">
+                                <h3>Era Battle</h3>
+                                <p>10 questions</p>
+                                <p>Focus on specific time periods</p>
+                            </div>
+                            <div class="game-mode" id="legend-mode">
+                                <h3>Legend Mode</h3>
+                                <p>10 questions</p>
+                                <p>All about iconic artists</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 30px; text-align: center;">
+                            <p><strong>Win Real Prizes!</strong> The highest scores each week qualify for exclusive TEG-Report.com merchandise and more!</p>
+                        </div>
+                    </div>
+                    
+                    <div id="category-screen" class="hidden">
+                        <h3 style="margin-bottom: 20px; text-align: center;">Select a Category</h3>
+                        
+                        <div class="categories">
+                            <div class="category" data-category="oldschool">
+                                <h3>Old School<br>(1985-1995)</h3>
+                                <div class="difficulty-badge difficulty-medium">Medium</div>
+                            </div>
+                            <div class="category" data-category="golden">
+                                <h3>Golden Era<br>(1995-2005)</h3>
+                                <div class="difficulty-badge difficulty-medium">Medium</div>
+                            </div>
+                            <div class="category" data-category="modern">
+                                <h3>Modern Era<br>(2005-2025)</h3>
+                                <div class="difficulty-badge difficulty-easy">Easy</div>
+                            </div>
+                            <div class="category" data-category="underground">
+                                <h3>Underground<br>Classics</h3>
+                                <div class="difficulty-badge difficulty-hard">Hard</div>
+                            </div>
+                            <div class="category" data-category="producers">
+                                <h3>Producers<br>& Beats</h3>
+                                <div class="difficulty-badge difficulty-medium">Medium</div>
+                            </div>
+                            <div class="category" data-category="culture">
+                                <h3>Hip-Hop<br>Culture</h3>
+                                <div class="difficulty-badge difficulty-easy">Easy</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="question-preview" class="hidden">
+                        <h3 class="category-title" id="preview-category">Category Name</h3>
+                        <p>Get ready for your Hip-Hop knowledge challenge!</p>
+                        <div class="question-preview-text">
+                            The questions will test your knowledge about the greatest artists, albums, and cultural moments in hip-hop history.
+                        </div>
+                        <p>Click start when you're ready.</p>
+                        <button class="start-button" id="begin-quiz">Start Quiz</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Created by <a href="#" style="color: var(--teg-brand-color); text-decoration: none;">TEG-Report.com</a> | Hip-Hop Trivia Game © 2025</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">Celebrating 40 years of hip-hop culture from underground to mainstream.</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Game state object
+        let gameState = {
+            playerName: "",
+            mode: null,
+            category: null,
+            soundEnabled: true
+        };
+        
+        // Helper function to show messages without alerts
+        function showMessage(text, duration = 2000) {
+            const messageBox = document.getElementById('message-box');
+            messageBox.textContent = text;
+            messageBox.classList.add('visible');
+            
+            setTimeout(() => {
+                messageBox.classList.remove('visible');
+            }, duration);
+        }
+        
+        // Helper function to hide all screens
+        function hideAllScreens() {
+            document.getElementById('player-entry-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('category-screen').classList.add('hidden');
+            document.getElementById('question-preview').classList.add('hidden');
+        }
+        
+        // Player name submission
+        document.getElementById('start-button').addEventListener('click', function() {
+            const nameInput = document.getElementById('player-name');
+            const playerName = nameInput.value.trim();
+            
+            if (playerName.length < 2) {
+                showMessage("Please enter a name with at least 2 characters");
+                return;
+            }
+            
+            gameState.playerName = playerName;
+            localStorage.setItem('hipHopTriviaPlayer', playerName);
+            
+            // Show start screen
+            hideAllScreens();
+            document.getElementById('start-screen').classList.remove('hidden');
+            document.getElementById('screen-title').textContent = `Choose Your Game Mode, ${gameState.playerName}!`;
+        });
+        
+        // Game mode selection
+        document.querySelectorAll('.game-mode').forEach(mode => {
+            mode.addEventListener('click', function() {
+                const modeId = this.id.split('-')[0]; // extract mode name from id
+                gameState.mode = modeId;
+                
+                // Show appropriate screen based on mode
+                hideAllScreens();
+                document.getElementById('category-screen').classList.remove('hidden');
+                
+                // Update the screen title
+                const modeNames = {
+                    quick: "Quick Play",
+                    full: "Full Game",
+                    era: "Era Battle",
+                    legend: "Legend Mode"
+                };
+                document.getElementById('screen-title').textContent = modeNames[modeId];
+            });
+        });
+        
+        // Category selection
+        document.querySelectorAll('.category').forEach(category => {
+            category.addEventListener('click', function() {
+                const categoryName = this.getAttribute('data-category');
+                gameState.category = categoryName;
+                
+                // Show question preview screen
+                hideAllScreens();
+                document.getElementById('question-preview').classList.remove('hidden');
+                
+                // Update category title
+                const categoryNames = {
+                    'oldschool': 'Old School (1985-1995)',
+                    'golden': 'Golden Era (1995-2005)',
+                    'modern': 'Modern Era (2005-2025)',
+                    'underground': 'Underground Classics',
+                    'producers': 'Producers & Beats',
+                    'culture': 'Hip-Hop Culture'
+                };
+                document.getElementById('preview-category').textContent = categoryNames[categoryName];
+                
+                // Update screen title
+                document.getElementById('screen-title').textContent = "Get Ready!";
+            });
+        });
+        
+        // Begin quiz button
+        document.getElementById('begin-quiz').addEventListener('click', function() {
+            showMessage(`Quiz starting: ${gameState.mode} mode, ${gameState.category} category`);
+            // In a complete implementation, this would load questions and start the quiz
+        });
+        
+        // Sound toggle functionality
+        document.getElementById('sound-toggle').addEventListener('click', function() {
+            gameState.soundEnabled = !gameState.soundEnabled;
+            
+            // Toggle between sound on/off emojis
+            this.textContent = gameState.soundEnabled ? '🔊' : '🔇';
+            
+            // Show subtle message instead of alert
+            showMessage(`Sound ${gameState.soundEnabled ? 'enabled' : 'disabled'}`);
+        });
+        
+        // Check for returning player
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedPlayer = localStorage.getItem('hipHopTriviaPlayer');
+            if (savedPlayer) {
+                gameState.playerName = savedPlayer;
+                hideAllScreens();
+                document.getElementById('start-screen').classList.remove('hidden');
+                document.getElementById('screen-title').textContent = `Choose Your Game Mode, ${gameState.playerName}!`;
+            }
+        });
+    </script>
+</body>
+</html>
