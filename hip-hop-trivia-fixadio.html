@@ -738,102 +738,13 @@
             font-size: 0.9rem;
             opacity: 0.7;
         }
-
-        /* NEW: Sound animation */
-        .sound-wave {
-            position: absolute;
-            top: 10px;
-            left: 70px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            gap: 3px;
-        }
-        
-        .sound-wave span {
-            display: block;
-            width: 3px;
-            height: 8px;
-            background-color: var(--primary-color);
-            border-radius: 1px;
-            animation: sound-wave 1.5s infinite ease-in-out;
-        }
-        
-        .sound-wave span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        
-        .sound-wave span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-        
-        .sound-wave span:nth-child(4) {
-            animation-delay: 0.6s;
-        }
-        
-        .sound-wave span:nth-child(5) {
-            animation-delay: 0.8s;
-        }
-        
-        @keyframes sound-wave {
-            0%, 100% {
-                height: 8px;
-            }
-            50% {
-                height: 16px;
-            }
-        }
-        
-        .hidden-wave {
-            visibility: hidden;
-        }
-
-        /* NEW: Countdown animation */
-        .countdown {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            font-size: 10rem;
-            color: var(--primary-color);
-            font-weight: bold;
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .countdown.active {
-            visibility: visible;
-            opacity: 1;
-        }
-        
-        .countdown-number {
-            animation: pulse 1s 1;
-        }
     </style>
 </head>
 <body>
-    <div class="countdown" id="countdown">
-        <div class="countdown-number">3</div>
-    </div>
-
     <div class="container">
         <header>
             <div class="teg-logo">TEG-REPORT.COM</div>
             <div class="sound-control" id="sound-toggle">🔊</div>
-            <div class="sound-wave hidden-wave" id="sound-wave">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
             <h1>Hip-Hop Head Trivia</h1>
             <p class="subtitle">Test your knowledge from Underground to Mainstream (1985-2025)</p>
         </header>
@@ -938,4 +849,1642 @@
                                 <div class="timer-bar" id="timer-bar"></div>
                             </div>
                             
-                            <div class
+                            <div class="question-text" id="question-text">Question goes here?</div>
+                            
+                            <div class="answers" id="answers-container">
+                                <!-- Answers will be inserted dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="bonus-question-screen" class="hidden">
+                        <div class="progress-container">
+                            <div class="progress-bar" id="bonus-progress"></div>
+                        </div>
+                        
+                        <div class="question-container">
+                            <div class="question-header">
+                                <div class="question-category">BONUS ROUND</div>
+                                <h3 class="current-score" id="bonus-score">Score: 0</h3>
+                            </div>
+                            
+                            <div class="timer">
+                                <div class="timer-bar" id="bonus-timer-bar"></div>
+                            </div>
+                            
+                            <div class="question-text" id="bonus-question-text">Bonus question goes here...</div>
+                            
+                            <div class="fill-blank-container">
+                                <input type="text" id="fill-blank-input" class="fill-blank-input" placeholder="Type your answer...">
+                                <button class="submit-button" onclick="checkFillBlank()">Submit Answer</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="feedback-screen" class="hidden">
+                        <div class="feedback-container">
+                            <div id="feedback-message" class="feedback-message"></div>
+                            <div id="correct-answer" class="explanation"></div>
+                            <div id="answer-explanation" class="explanation"></div>
+                            <button class="submit-button" onclick="continueThroughFeedback()">Continue</button>
+                        </div>
+                    </div>
+                    
+                    <div id="results-screen" class="hidden">
+                        <div class="results-container">
+                            <div class="results-header">
+                                <h3>Game Complete!</h3>
+                                <div class="results-score" id="final-score">0</div>
+                                <p id="score-message">Score message goes here</p>
+                            </div>
+                            
+                            <div class="score-details">
+                                <div class="score-detail">
+                                    <div class="detail-value" id="correct-count">0</div>
+                                    <div class="detail-label">Correct Answers</div>
+                                </div>
+                                <div class="score-detail">
+                                    <div class="detail-value" id="wrong-count">0</div>
+                                    <div class="detail-label">Wrong Answers</div>
+                                </div>
+                                <div class="score-detail">
+                                    <div class="detail-value" id="bonus-count">0</div>
+                                    <div class="detail-label">Bonus Questions</div>
+                                </div>
+                            </div>
+                            
+                            <div id="achievements-container" class="hidden">
+                                <h3 style="margin: 20px 0 10px 0;">Achievements Unlocked</h3>
+                                <div id="achievements-list">
+                                    <!-- Achievements will be added dynamically -->
+                                </div>
+                            </div>
+                            
+                            <div class="results-message">
+                                <div class="prize-eligible" id="prize-message">You're eligible for this week's prize drawing!</div>
+                                <p>Enter your email to be notified if you win:</p>
+                                <input type="email" class="fill-blank-input" placeholder="Your email address" style="margin-top: 15px;">
+                                <button class="submit-button" style="margin-top: 15px;">Submit</button>
+                            </div>
+                            
+                            <div class="share-container">
+                                <p>Share your score with friends:</p>
+                                <div class="share-buttons">
+                                    <div class="share-button" onclick="shareScore('facebook')">f</div>
+                                    <div class="share-button" onclick="shareScore('twitter')">t</div>
+                                    <div class="share-button" onclick="shareScore('instagram')">ig</div>
+                                    <div class="share-button" onclick="shareScore('linkedin')">in</div>
+                                </div>
+                            </div>
+                            
+                            <div class="action-buttons">
+                                <button class="action-button primary-button" onclick="restartGame()">Play Again</button>
+                                <button class="action-button secondary-button" onclick="showLeaderboard()">View Leaderboard</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Leaderboard Modal -->
+        <div class="modal-overlay" id="leaderboard-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Hip-Hop Trivia Leaderboard</h3>
+                    <button class="modal-close" onclick="closeModal('leaderboard-modal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <ul class="leaderboard-list" id="leaderboard-list">
+                        <!-- Leaderboard entries will be added dynamically -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer style="text-align: center; padding: 20px; opacity: 0.7;">
+            <p>Created by <a href="#" style="color: var(--teg-brand-color); text-decoration: none;">TEG-Report.com</a> | Hip-Hop Trivia Game &copy; 2025</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">Celebrating 40 years of hip-hop culture from underground to mainstream.</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Game state object
+        let gameState = {
+            playerName: "",
+            mode: null,
+            category: null,
+            questions: [],
+            currentQuestionIndex: 0,
+            score: 0,
+            correctAnswers: 0,
+            wrongAnswers: 0,
+            bonusAnswers: 0,
+            startTime: null,
+            endTime: null,
+            timer: null,
+            timeLimit: 15, // seconds per question
+            timeRemaining: 15,
+            soundEnabled: true,
+            achievements: []
+        };
+        
+        // Audio elements
+        const sounds = {
+            background: new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAAbAAhgYGDQ0NFBQUGxsbIiIiKSkpMDAwNzc3Pj4+RUVFTU1NVFRUUVFR'),
+            correct: new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAAbAAhgYGDQ0NFBQUGxsbIiIiKSkpMDAwNzc3Pj4+RUVFTU1NVFRUUVFR'),
+            wrong: new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAAbAAhgYGDQ0NFBQUGxsbIiIiKSkpMDAwNzc3Pj4+RUVFTU1NVFRUUVFR'),
+            bonus: new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAAbAAhgYGDQ0NFBQUGxsbIiIiKSkpMDAwNzc3Pj4+RUVFTU1NVFRUUVFR'),
+            gameOver: new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAAbAAhgYGDQ0NFBQUGxsbIiIiKSkpMDAwNzc3Pj4+RUVFTU1NVFRUUVFR')
+        };
+        
+        // Comprehensive questions database
+        const questionsDatabase = {
+            oldschool: [
+                {
+                    question: "Which artist released the influential album 'Paid in Full' in 1987, featuring revolutionary sampling techniques?",
+                    answers: ["Eric B. & Rakim", "Run-DMC", "Public Enemy", "LL Cool J"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "medium",
+                    explanation: "Eric B. & Rakim's 'Paid in Full' (1987) is considered one of the most influential hip-hop albums, with Rakim's innovative flow and Eric B.'s sampling revolutionizing the genre."
+                },
+                {
+                    question: "Which 1988 album by Public Enemy is often cited as one of the greatest and most influential hip-hop albums of all time?",
+                    answers: ["It Takes a Nation of Millions to Hold Us Back", "Fear of a Black Planet", "Yo! Bum Rush the Show", "Apocalypse 91"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "'It Takes a Nation of Millions to Hold Us Back' (1988) was revolutionary for its dense production, political lyrics, and the Bomb Squad's innovative sampling techniques."
+                },
+                {
+                    question: "Which group released the 1989 album '3 Feet High and Rising', known for its innovative sampling and the 'D.A.I.S.Y. Age'?",
+                    answers: ["De La Soul", "A Tribe Called Quest", "The Jungle Brothers", "Black Sheep"],
+                    correct: 0,
+                    points: 400,
+                    difficulty: "medium",
+                    explanation: "De La Soul's '3 Feet High and Rising' introduced the D.A.I.S.Y. (Da Inner Sound, Y'all) Age with its eclectic samples and positive lyrics, offering an alternative to gangsta rap."
+                },
+                {
+                    question: "Which 1989 album featured the hip-hop classics 'Me Myself and I' and 'Eye Know'?",
+                    answers: ["3 Feet High and Rising", "Paul's Boutique", "No One Can Do It Better", "Strictly Business"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "De La Soul's '3 Feet High and Rising' featured these hit singles that helped define alternative hip-hop in the late 1980s."
+                },
+                {
+                    question: "Who produced Run-DMC's groundbreaking album 'Raising Hell' (1986)?",
+                    answers: ["Rick Rubin", "Marley Marl", "Dr. Dre", "Prince Paul"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "Rick Rubin, along with Russell Simmons, produced this landmark album that included the Aerosmith collaboration 'Walk This Way,' helping bring hip-hop to mainstream audiences."
+                },
+                {
+                    question: "Which hip-hop group featured Flavor Flav as their hype man?",
+                    answers: ["Public Enemy", "N.W.A", "Beastie Boys", "Wu-Tang Clan"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "Flavor Flav was the animated hype man for Public Enemy, known for wearing large clocks around his neck and his catchphrase 'Yeah boyeee!'"
+                },
+                {
+                    question: "Which 1991 album by N.W.A member Dr. Dre introduced G-Funk to mainstream audiences?",
+                    answers: ["The Chronic", "Efil4zaggin", "AmeriKKKa's Most Wanted", "Death Certificate"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "easy",
+                    explanation: "While 'The Chronic' was released in 1992, not 1991, it was Dr. Dre's debut solo album that popularized the G-Funk sound with its P-Funk samples and laid-back beats."
+                },
+                {
+                    question: "Which pioneering female MC released 'Black Reign' in 1993?",
+                    answers: ["Queen Latifah", "MC Lyte", "Salt-N-Pepa", "Yo-Yo"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "Queen Latifah's 'Black Reign' featured the Grammy-winning single 'U.N.I.T.Y.' which addressed issues of street harassment and disrespect toward women."
+                },
+                {
+                    question: "Which hip-hop group featured Kid, Play, and DJ Wiz?",
+                    answers: ["Kid 'n Play", "Salt-N-Pepa", "EPMD", "Das EFX"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "medium",
+                    explanation: "Kid 'n Play were a hip-hop duo known for their movies, distinctive dance moves, and hits like 'Rollin' with Kid 'n Play'. DJ Wiz often performed with them."
+                },
+                {
+                    question: "Which artist pioneered 'horrorcore' with the 1991 album 'Mind of a Lunatic'?",
+                    answers: ["Geto Boys", "Ice Cube", "Kool G Rap", "Just-Ice"],
+                    correct: 0,
+                    points: 400,
+                    difficulty: "hard",
+                    explanation: "The Geto Boys, particularly Bushwick Bill, pioneered horrorcore with graphic, violent imagery on their self-titled album that included 'Mind of a Lunatic.'"
+                }
+            ],
+            golden: [
+                {
+                    question: "Which 1994 album is considered Nas's masterpiece and one of the greatest hip-hop albums ever made?",
+                    answers: ["Illmatic", "It Was Written", "Stillmatic", "God's Son"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "'Illmatic' is widely regarded as one of the greatest hip-hop albums of all time, featuring production from DJ Premier, Large Professor, Q-Tip, and Pete Rock."
+                },
+                {
+                    question: "Which Wu-Tang Clan member released 'Only Built 4 Cuban Linx...' in 1995?",
+                    answers: ["Raekwon", "GZA", "Method Man", "Ghostface Killah"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "Raekwon released this classic album with significant contributions from Ghostface Killah. It's often credited with popularizing mafioso rap."
+                },
+                {
+                    question: "Which 1996 album by Jay-Z featured the hit 'Can't Knock the Hustle'?",
+                    answers: ["Reasonable Doubt", "In My Lifetime, Vol. 1", "Vol. 2... Hard Knock Life", "The Blueprint"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "'Reasonable Doubt' was Jay-Z's critically acclaimed debut album, establishing him as a major figure in East Coast hip-hop."
+                },
+                {
+                    question: "Which landmark 1995 album by The Notorious B.I.G. featured the hits 'Juicy' and 'Big Poppa'?",
+                    answers: ["Ready to Die", "Life After Death", "Born Again", "Junior M.A.F.I.A."],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "'Ready to Die' was Biggie's debut studio album and is considered one of the greatest hip-hop albums of all time, showcasing his storytelling abilities and flow."
+                },
+                {
+                    question: "Which producer was known as the 'beat mining' architect behind many of A Tribe Called Quest's classic albums?",
+                    answers: ["Q-Tip", "DJ Premier", "Pete Rock", "RZA"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "Q-Tip (also known as Kamaal the Abstract) was a member of A Tribe Called Quest and produced most of their classic material, pioneering jazz-rap."
+                },
+                {
+                    question: "Which artist released 'The Miseducation of Lauryn Hill' in 1998?",
+                    answers: ["Lauryn Hill", "Missy Elliott", "Erykah Badu", "Lil' Kim"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "Lauryn Hill's solo debut after The Fugees won five Grammy Awards and is considered one of the greatest albums of all time, blending hip-hop, R&B, and soul."
+                },
+                {
+                    question: "Which producer coined the phrase 'Soulquarians' for the collective that worked on albums like D'Angelo's 'Voodoo' and Common's 'Like Water for Chocolate'?",
+                    answers: ["Questlove", "J Dilla", "Q-Tip", "Madlib"],
+                    correct: 0,
+                    points: 400,
+                    difficulty: "hard",
+                    explanation: "Questlove of The Roots was a founding member of the Soulquarians collective that included D'Angelo, Erykah Badu, Common, J Dilla, and others."
+                },
+                {
+                    question: "Which 1998 album by DMX was his debut and featured 'Ruff Ryders' Anthem'?",
+                    answers: ["It's Dark and Hell Is Hot", "Flesh of My Flesh, Blood of My Blood", "...And Then There Was X", "Grand Champ"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "'It's Dark and Hell Is Hot' was DMX's breakout debut album, helping to shift focus back to East Coast hip-hop after years of West Coast dominance."
+                },
+                {
+                    question: "Which 1999 album by Eminem featured the alter ego Slim Shady?",
+                    answers: ["The Slim Shady LP", "The Marshall Mathers LP", "The Eminem Show", "Encore"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "'The Slim Shady LP' was Eminem's major-label debut, introducing his controversial alter ego and produced by Dr. Dre."
+                },
+                {
+                    question: "Which 2001 album by Jay-Z featured the track 'Takeover,' part of his famous beef with Nas?",
+                    answers: ["The Blueprint", "The Black Album", "Reasonable Doubt", "Vol. 3... Life and Times of S. Carter"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "'The Blueprint' was released on September 11, 2001, and is considered one of Jay-Z's best albums, featuring production from Kanye West and Just Blaze."
+                }
+            ],
+            modern: [
+                {
+                    question: "Which 2010 Kanye West album featured the hits 'Power' and 'Runaway'?",
+                    answers: ["My Beautiful Dark Twisted Fantasy", "Yeezus", "The Life of Pablo", "Graduation"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "'My Beautiful Dark Twisted Fantasy' is widely regarded as one of Kanye's greatest works and one of the best albums of the 2010s."
+                },
+                {
+                    question: "Which rapper released 'To Pimp a Butterfly' in 2015?",
+                    answers: ["Kendrick Lamar", "J. Cole", "Drake", "Tyler, The Creator"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "Kendrick Lamar's 'To Pimp a Butterfly' was a critical success that blended jazz, funk, and hip-hop while addressing themes of African American culture and racial inequality."
+                },
+                {
+                    question: "Which artist popularized 'mumble rap' with hits like 'Bad and Boujee'?",
+                    answers: ["Migos", "Future", "Young Thug", "Lil Uzi Vert"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "Migos, particularly with their 2016 hit 'Bad and Boujee,' helped popularize the trap-influenced 'mumble rap' style with their distinctive triplet flow."
+                },
+                {
+                    question: "Which female rapper's 'Invasion of Privacy' won the Grammy for Best Rap Album in 2019?",
+                    answers: ["Cardi B", "Nicki Minaj", "Megan Thee Stallion", "Doja Cat"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "Cardi B's 'Invasion of Privacy' made her the first female solo artist to win this category, with hits like 'Bodak Yellow' and 'I Like It.'"
+                },
+                {
+                    question: "Which artist released the album 'Damn.' that won a Pulitzer Prize for Music in 2018?",
+                    answers: ["Kendrick Lamar", "Chance the Rapper", "J. Cole", "Childish Gambino"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "Kendrick Lamar's 'Damn.' was the first non-jazz, non-classical work to win the Pulitzer Prize for Music, recognized for its complex storytelling and social commentary."
+                },
+                {
+                    question: "Which 2018 Pusha T album featured the Drake diss track 'The Story of Adidon'?",
+                    answers: ["Daytona", "My Name Is My Name", "King Push", "Fear of God II"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium", 
+                    explanation: "'Daytona' was produced by Kanye West as part of his Wyoming sessions. 'The Story of Adidon' was released separately during the Drake-Pusha T beef but was related to the album rollout."
+                },
+                {
+                    question: "Which rapper's posthumous album 'Legends Never Die' was released in 2020?",
+                    answers: ["Juice WRLD", "Pop Smoke", "XXXTentacion", "Mac Miller"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "Juice WRLD's 'Legends Never Die' was released after his death in December 2019 and debuted at number one on the Billboard 200."
+                },
+                {
+                    question: "Which rapper coined the term 'Drip' that became popular in hip-hop culture?",
+                    answers: ["Gunna", "Lil Baby", "Young Thug", "Future"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "Gunna popularized 'Drip' in hip-hop slang, referring to fashionable, expensive style, and even named his mixtape series 'Drip Season.'"
+                },
+                {
+                    question: "Which production duo worked with artists like Megan Thee Stallion and produced the hit 'Savage'?",
+                    answers: ["J. White Did It", "Take a Daytrip", "Internet Money", "808 Mafia"],
+                    correct: 0,
+                    points: 400,
+                    difficulty: "hard",
+                    explanation: "J. White Did It produced 'Savage' along with other Megan Thee Stallion hits and has worked with Cardi B on 'Bodak Yellow.'"
+                },
+                {
+                    question: "Which controversial rapper released 'Culture III' with Migos in 2021?",
+                    answers: ["Offset", "Quavo", "Takeoff", "Lil Yachty"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "Offset is a member of Migos alongside Quavo and Takeoff (R.I.P.), who released their 'Culture' trilogy with the third installment coming in 2021."
+                }
+            ],
+            underground: [
+                {
+                    question: "Which underground rapper founded Rhymesayers Entertainment in 1995?",
+                    answers: ["Slug", "Aesop Rock", "MF DOOM", "El-P"],
+                    correct: 0,
+                    points: 400,
+                    difficulty: "hard",
+                    explanation: "Slug (of Atmosphere) co-founded Rhymesayers Entertainment, one of the most influential independent hip-hop labels based in Minneapolis."
+                },
+                {
+                    question: "Which masked underground rapper was known for albums like 'Madvillainy' and 'MM..FOOD'?",
+                    answers: ["MF DOOM", "Dr. Octagon", "RZA", "Del the Funky Homosapien"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "MF DOOM (Daniel Dumile) was known for his metal mask, complex rhymes, and multiple aliases. 'Madvillainy' was a collaboration with producer Madlib."
+                },
+                {
+                    question: "Which underground group released 'Labor Days' in 2001?",
+                    answers: ["Aesop Rock", "Cannibal Ox", "The Coup", "Company Flow"],
+                    correct: 0,
+                    points: 400,
+                    difficulty: "hard",
+                    explanation: "'Labor Days' was actually Aesop Rock's solo album, not a group release, known for his dense, complex lyrics and abstract storytelling."
+                },
+                {
+                    question: "Which producer/rapper founded Definitive Jux records?",
+                    answers: ["El-P", "DJ Shadow", "RJD2", "J Dilla"],
+                    correct: 0,
+                    points: 400,
+                    difficulty: "hard",
+                    explanation: "El-P (now of Run the Jewels) founded Definitive Jux, which released groundbreaking underground hip-hop from artists like Cannibal Ox and Aesop Rock."
+                },
+                {
+                    question: "Which Detroit producer was known as 'your favorite producer's favorite producer' before his death in 2006?",
+                    answers: ["J Dilla", "Black Milk", "Apollo Brown", "Madlib"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "J Dilla (James Yancey) was highly influential for his innovative production techniques, sampling, and unique drum programming."
+                },
+                {
+                    question: "Which underground MC's debut album was titled 'Internal Affairs' (1999)?",
+                    answers: ["Pharoahe Monch", "Talib Kweli", "Mos Def", "Black Thought"],
+                    correct: 0,
+                    points: 400,
+                    difficulty: "hard",
+                    explanation: "Pharoahe Monch's solo debut after Organized Konfusion featured the hit 'Simon Says' and showcased his complex rhyme patterns and vocabulary."
+                },
+                {
+                    question: "Which underground group released the album 'Funcrusher Plus' in 1997?",
+                    answers: ["Company Flow", "Non Phixion", "Jedi Mind Tricks", "The Weathermen"],
+                    correct: 0,
+                    points: 400,
+                    difficulty: "hard",
+                    explanation: "Company Flow, consisting of El-P, Bigg Jus, and Mr. Len, released this influential underground classic on Rawkus Records."
+                },
+                {
+                    question: "Which underground rapper is known for his 'Freestyle Fellowship' collective from Los Angeles?",
+                    answers: ["Aceyalone", "2Mex", "Busdriver", "Myka 9"],
+                    correct: 0,
+                    points: 500,
+                    difficulty: "hard",
+                    explanation: "Aceyalone was a founding member of Freestyle Fellowship, known for their jazz-influenced, experimental approach to hip-hop in the early 1990s."
+                },
+                {
+                    question: "Which independent label released albums by Atmosphere and Brother Ali?",
+                    answers: ["Rhymesayers", "Stones Throw", "Definitive Jux", "Anticon"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "Rhymesayers Entertainment is a Minneapolis-based indie hip-hop label founded in 1995 that has released music by many notable underground artists."
+                },
+                {
+                    question: "Which underground duo consists of Killer Mike and El-P?",
+                    answers: ["Run the Jewels", "The Alchemist", "Madvillain", "Blackstar"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "Run the Jewels formed in 2013 and has released four critically acclaimed albums that blend political commentary with hard-hitting production."
+                }
+            ],
+            producers: [
+                {
+                    question: "Which producer is known for the distinctive 'boom bap' sound in the 1990s?",
+                    answers: ["DJ Premier", "Dr. Dre", "Timbaland", "The Neptunes"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "DJ Premier (of Gang Starr) is considered one of the pioneers of the boom bap style with its hard-hitting drums and jazzy samples."
+                },
+                {
+                    question: "Which producer was behind the 'G-Funk' sound on albums like Dr. Dre's 'The Chronic'?",
+                    answers: ["Dr. Dre", "DJ Quik", "Battlecat", "Warren G"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "Dr. Dre pioneered the G-Funk sound with its synthesizer leads, slow tempos, and funk samples, defining West Coast hip-hop in the 1990s."
+                },
+                {
+                    question: "Which production duo worked extensively with Jay-Z and Kanye West in the early 2000s?",
+                    answers: ["The Neptunes", "Trackmasters", "The Heatmakerz", "Cool & Dre"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "The Neptunes (Pharrell Williams and Chad Hugo) produced hits for Jay-Z like 'I Just Wanna Love U' and for Kanye such as 'Number One.'"
+                },
+                {
+                    question: "Who produced the majority of Nas's acclaimed 'Illmatic' album?",
+                    answers: ["Multiple producers", "Large Professor", "DJ Premier", "Q-Tip"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "'Illmatic' featured production from DJ Premier, Large Professor, Q-Tip, Pete Rock, and L.E.S., each contributing to its classic status."
+                },
+                {
+                    question: "Which producer is known for his work with Eminem, including 'The Marshall Mathers LP'?",
+                    answers: ["Dr. Dre", "The Alchemist", "Eminem himself", "Rick Rubin"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "Dr. Dre signed Eminem to Aftermath and produced many of his biggest hits, though Eminem also self-produces much of his work."
+                },
+                {
+                    question: "Which producer pioneered the 'chopped and screwed' technique in Houston?",
+                    answers: ["DJ Screw", "Mike Dean", "Mannie Fresh", "Zaytoven"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "DJ Screw (Robert Earl Davis Jr.) created the chopped and screwed technique of slowing down tempos and manipulating records, influencing Southern hip-hop."
+                },
+                {
+                    question: "Which producer was known for the Soulquarians collective and his MPC techniques before his death in 2006?",
+                    answers: ["J Dilla", "Madlib", "9th Wonder", "Hi-Tek"],
+                    correct: 0,
+                    points: 400,
+                    difficulty: "hard",
+                    explanation: "J Dilla (James Yancey) was known for his innovative drum programming and sampling techniques that influenced countless producers."
+                },
+                {
+                    question: "Which producer duo created Jay-Z's 'The Blueprint' and later worked with Kanye West?",
+                    answers: ["Just Blaze and Kanye West", "The Neptunes", "Timbaland and Swizz Beatz", "No I.D. and Bink"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "Just Blaze and a young Kanye West produced much of Jay-Z's classic 'The Blueprint,' with their soul-sampling approach defining an era of hip-hop production."
+                },
+                {
+                    question: "Which producer is known for his drum machine work and founding Stones Throw Records?",
+                    answers: ["Peanut Butter Wolf", "MF DOOM", "Madlib", "Oh No"],
+                    correct: 0,
+                    points: 400,
+                    difficulty: "hard",
+                    explanation: "Peanut Butter Wolf (Chris Manak) founded Stones Throw Records in 1996, which became home to underground artists like Madlib, MF DOOM, and J Dilla."
+                },
+                {
+                    question: "Which legendary producer was known as 'The 45 King'?",
+                    answers: ["Mark James", "Larry Smith", "Marley Marl", "Prince Paul"],
+                    correct: 0,
+                    points: 500,
+                    difficulty: "hard",
+                    explanation: "Mark James, aka 'The 45 King,' produced classics like Queen Latifah's 'Ladies First' and Jay-Z's 'Hard Knock Life' and was known for his work with 45 RPM vinyl records."
+                }
+            ],
+            culture: [
+                {
+                    question: "Which 1983 film is credited with bringing hip-hop culture to mainstream audiences?",
+                    answers: ["Wild Style", "Beat Street", "Krush Groove", "Breakin'"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "'Wild Style' was the first film to showcase all four elements of hip-hop: MCing, DJing, breaking, and graffiti art, featuring pioneers like Fab Five Freddy and Grandmaster Flash."
+                },
+                {
+                    question: "Which dance style emerged from hip-hop culture in the South Bronx during the 1970s?",
+                    answers: ["Breaking (B-boying/B-girling)", "Crumping", "Voguing", "Jerkin'"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "Breaking, also known as B-boying or B-girling (and mistakenly called 'breakdancing' in the media), developed alongside the early DJ culture in the Bronx."
+                },
+                {
+                    question: "Which hip-hop magazine was founded by David Mays in 1988?",
+                    answers: ["The Source", "XXL", "Vibe", "Complex"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "The Source was founded as a newsletter at Harvard University before becoming the 'Bible of Hip-Hop' and one of the genre's most influential publications."
+                },
+                {
+                    question: "Which fashion trend was popularized by Run-DMC in the 1980s?",
+                    answers: ["Adidas sneakers without laces", "Kangol hats", "Starter jackets", "Cross Colours jeans"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "Run-DMC popularized wearing Adidas sneakers without laces, even recording the song 'My Adidas' which led to the first endorsement deal between hip-hop artists and a major corporation."
+                },
+                {
+                    question: "Which DJ is credited with inventing the 'scratch' technique?",
+                    answers: ["Grand Wizard Theodore", "Grandmaster Flash", "Afrika Bambaataa", "Kool Herc"],
+                    correct: 0,
+                    points: 400,
+                    difficulty: "hard",
+                    explanation: "Grand Wizard Theodore discovered scratching in the mid-1970s, allegedly while his mother was yelling at him to turn down his music, and he accidentally moved the record back and forth."
+                },
+                {
+                    question: "Which 1990s hip-hop clothing brand was founded by Karl Kani?",
+                    answers: ["Karl Kani", "FUBU", "Cross Colours", "Phat Farm"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "Karl Kani (Carl Williams) founded his eponymous brand in 1989, becoming one of the first urban fashion designers and a significant influence on hip-hop style."
+                },
+                {
+                    question: "Which hip-hop element involves aerosol art on walls and trains?",
+                    answers: ["Graffiti", "B-boying", "DJing", "MCing"],
+                    correct: 0,
+                    points: 200,
+                    difficulty: "easy",
+                    explanation: "Graffiti is considered one of the four foundational elements of hip-hop culture, with pioneers like TAKI 183, PHASE 2, and LADY PINK."
+                },
+                {
+                    question: "Which pioneering DJ is credited with creating the 'Merry-Go-Round' technique that extended breakbeats?",
+                    answers: ["DJ Kool Herc", "Afrika Bambaataa", "Grandmaster Flash", "DJ Hollywood"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "DJ Kool Herc (Clive Campbell) pioneered the 'Merry-Go-Round' technique of isolating and extending the breakbeat sections of funk records, which is considered the foundation of hip-hop music."
+                },
+                {
+                    question: "Which hip-hop radio show, hosted by Stretch Armstrong and Bobbito Garcia, helped launch many underground careers?",
+                    answers: ["The Stretch Armstrong and Bobbito Show", "Yo! MTV Raps", "Rap City", "The Wake Up Show"],
+                    correct: 0,
+                    points: 400,
+                    difficulty: "hard",
+                    explanation: "The Stretch Armstrong and Bobbito Show on WKCR in New York (1990-1998) featured early appearances from artists like Nas, Wu-Tang Clan, and The Notorious B.I.G. before they were signed."
+                },
+                {
+                    question: "Which organization founded by Afrika Bambaataa promoted peace and unity in hip-hop?",
+                    answers: ["Universal Zulu Nation", "Rock Steady Crew", "The Temple of Hip Hop", "Five Percent Nation"],
+                    correct: 0,
+                    points: 300,
+                    difficulty: "medium",
+                    explanation: "The Universal Zulu Nation was founded in the 1970s to transform gang rivalry into creative competition through the elements of hip-hop, promoting 'peace, unity, love, and having fun.'"
+                }
+            ],
+            bonus: [
+                {
+                    question: "Complete this famous Notorious B.I.G. lyric from 'Juicy': 'It was all a dream, I used to read ____ magazine'",
+                    answer: "word up",
+                    points: 500,
+                    explanation: "The complete line is 'It was all a dream, I used to read Word Up! magazine' - referencing a popular music magazine from the 80s and 90s."
+                },
+                {
+                    question: "Finish this classic Wu-Tang Clan lyric: 'Cash rules everything around me, C.R.E.A.M., get the money, ____, ____'",
+                    answer: "dollar dollar bill y'all",
+                    points: 500,
+                    explanation: "From Wu-Tang Clan's 'C.R.E.A.M.' (Cash Rules Everything Around Me) released in 1994 on their debut album 'Enter the Wu-Tang (36 Chambers)'."
+                },
+                {
+                    question: "Complete the title of this 1992 Dr. Dre debut solo album: 'The _____'",
+                    answer: "chronic",
+                    points: 400,
+                    explanation: "'The Chronic' was Dr. Dre's influential solo debut that established the G-Funk sound and launched Snoop Dogg's career."
+                },
+                {
+                    question: "Name the Queens, NY housing project that was home to Nas, Mobb Deep, and others mentioned in many classic hip-hop tracks.",
+                    answer: "queensbridge",
+                    points: 600,
+                    explanation: "Queensbridge Houses is the largest public housing development in North America and has produced an remarkable number of hip-hop artists."
+                },
+                {
+                    question: "Complete this famous line from Eric B. & Rakim: 'It ain't where you're from, it's where you're ____'",
+                    answer: "at",
+                    points: 400,
+                    explanation: "This iconic line from 'I Know You Got Soul' (1987) has become a widely quoted hip-hop philosophy about authenticity and current status over origins."
+                },
+                {
+                    question: "What was the name of the legendary New York nightclub where DJ Kool Herc played his first block parties?",
+                    answer: "1520 sedgwick avenue",
+                    points: 700,
+                    explanation: "While not actually a nightclub, 1520 Sedgwick Avenue in the Bronx is considered the birthplace of hip-hop, where DJ Kool Herc hosted his first parties in the recreation room."
+                },
+                {
+                    question: "Complete this Kendrick Lamar album title: 'To Pimp a _____'",
+                    answer: "butterfly",
+                    points: 400,
+                    explanation: "'To Pimp a Butterfly' (2015) is Kendrick Lamar's critically acclaimed third studio album that explores themes of African American culture, racial inequality, and personal struggles."
+                },
+                {
+                    question: "What was the birth name of the rapper known as MF DOOM?",
+                    answer: "daniel dumile",
+                    points: 600,
+                    explanation: "Daniel Dumile (pronounced 'DOOM-ee-lay') performed under various aliases including MF DOOM, King Geedorah, and Viktor Vaughn. He passed away in 2020."
+                }
+            ]
+        };
+        
+        // Achievements list
+        const achievements = [
+            {
+                id: "first_perfect",
+                title: "Perfect Score!",
+                description: "Get all questions right in a game",
+                icon: "🏆",
+                check: (state) => state.correctAnswers >= 5 && state.wrongAnswers === 0
+            },
+            {
+                id: "speed_demon",
+                title: "Speed Demon",
+                description: "Answer 5 questions correctly with at least 5 seconds left on the timer",
+                icon: "⚡",
+                check: (state) => state.speedAnswers >= 5
+            },
+            {
+                id: "bonus_master",
+                title: "Bonus Master",
+                description: "Get 3 bonus questions correct",
+                icon: "🎯",
+                check: (state) => state.bonusAnswers >= 3
+            },
+            {
+                id: "old_school",
+                title: "Old School Scholar",
+                description: "Get a perfect score in the Old School category",
+                icon: "📻",
+                check: (state) => state.categoryPerfect === "oldschool"
+            },
+            {
+                id: "golden_era",
+                title: "Golden Era Guru",
+                description: "Get a perfect score in the Golden Era category",
+                icon: "🥇",
+                check: (state) => state.categoryPerfect === "golden"
+            },
+            {
+                id: "modern_master",
+                title: "Modern Master",
+                description: "Get a perfect score in the Modern Era category",
+                icon: "🎧",
+                check: (state) => state.categoryPerfect === "modern"
+            },
+            {
+                id: "underground_king",
+                title: "Underground King",
+                description: "Get a perfect score in the Underground category",
+                icon: "👑",
+                check: (state) => state.categoryPerfect === "underground"
+            },
+            {
+                id: "beat_maker",
+                title: "Beat Maker",
+                description: "Get a perfect score in the Producers category",
+                icon: "🎹",
+                check: (state) => state.categoryPerfect === "producers"
+            },
+            {
+                id: "culture_vulture",
+                title: "Culture Scholar",
+                description: "Get a perfect score in the Hip-Hop Culture category",
+                icon: "🎭",
+                check: (state) => state.categoryPerfect === "culture"
+            },
+            {
+                id: "high_score",
+                title: "High Scorer",
+                description: "Score over 5,000 points in a single game",
+                icon: "💯",
+                check: (state) => state.score >= 5000
+            }
+        ];
+        
+        // Initialize game when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            // Initialize leaderboard
+            loadLeaderboard();
+            
+            // Setup sound toggle
+            document.getElementById('sound-toggle').addEventListener('click', toggleSound);
+            
+            // Check for returning player
+            const savedPlayer = localStorage.getItem('hipHopTriviaPlayer');
+            if (savedPlayer) {
+                gameState.playerName = savedPlayer;
+                showStartScreen();
+            }
+            
+            // Add event handlers for fill-blank input (submit on Enter key)
+            document.getElementById('fill-blank-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkFillBlank();
+                }
+            });
+        });
+        
+        // Player name submission
+        function submitPlayerName() {
+            const nameInput = document.getElementById('player-name');
+            const playerName = nameInput.value.trim();
+            
+            if (playerName.length < 2) {
+                alert("Please enter a valid name with at least 2 characters.");
+                return;
+            }
+            
+            gameState.playerName = playerName;
+            localStorage.setItem('hipHopTriviaPlayer', playerName);
+            
+            showStartScreen();
+            playSound('background');
+        }
+        
+        // Show start screen
+        function showStartScreen() {
+            document.getElementById('player-entry-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+            document.getElementById('screen-title').textContent = `Choose Your Game Mode, ${gameState.playerName}!`;
+        }
+        
+        // Start game with selected mode
+        function startGame(mode) {
+            gameState.mode = mode;
+            gameState.score = 0;
+            gameState.correctAnswers = 0;
+            gameState.wrongAnswers = 0;
+            gameState.bonusAnswers = 0;
+            gameState.currentQuestionIndex = 0;
+            gameState.startTime = new Date();
+            gameState.speedAnswers = 0;
+            gameState.achievements = [];
+            
+            document.getElementById('start-screen').classList.add('hidden');
+            
+            // Different handling based on game mode
+            if (mode === 'quick' || mode === 'full') {
+                document.getElementById('category-screen').classList.remove('hidden');
+            } else if (mode === 'era') {
+                // Pre-select category mix based on eras
+                selectCategory('mixed-eras');
+            } else if (mode === 'legend') {
+                // Pre-select legend category
+                selectCategory('legend');
+            }
+            
+            // Update the screen title
+            const modeNames = {
+                quick: "Quick Play",
+                full: "Full Game",
+                era: "Era Battle",
+                legend: "Legend Mode"
+            };
+            document.getElementById('screen-title').textContent = modeNames[mode];
+            
+            playSound('bonus');
+        }
+        
+        // Select category and prepare questions
+        function selectCategory(category) {
+            gameState.category = category;
+            document.getElementById('category-screen').classList.add('hidden');
+            document.getElementById('question-screen').classList.remove('hidden');
+            
+            // Prepare questions based on category and mode
+            prepareQuestions();
+            
+            // Load first question
+            loadQuestion();
+            
+            // Start question timer
+            startTimer();
+        }
+        
+        // Prepare questions for the game
+        function prepareQuestions() {
+            let questions = [];
+            
+            // Handle regular categories
+            if (gameState.category === 'oldschool') {
+                questions = [...questionsDatabase.oldschool];
+            } else if (gameState.category === 'golden') {
+                questions = [...questionsDatabase.golden];
+            } else if (gameState.category === 'modern') {
+                questions = [...questionsDatabase.modern];
+            } else if (gameState.category === 'underground') {
+                questions = [...questionsDatabase.underground];
+            } else if (gameState.category === 'producers') {
+                questions = [...questionsDatabase.producers];
+            } else if (gameState.category === 'culture') {
+                questions = [...questionsDatabase.culture];
+            } 
+            // Handle special mixed categories
+            else if (gameState.category === 'mixed-eras') {
+                // Mix questions from different eras for Era Battle mode
+                questions = [
+                    ...getRandomQuestions(questionsDatabase.oldschool, 3),
+                    ...getRandomQuestions(questionsDatabase.golden, 3),
+                    ...getRandomQuestions(questionsDatabase.modern, 4)
+                ];
+            } else if (gameState.category === 'legend') {
+                // Create a special set focused on legendary artists
+                const legendQuestions = [
+                    // Add custom legend questions here in a real app
+                    // For now, we'll mix from existing categories
+                    ...getRandomQuestions(questionsDatabase.oldschool, 3),
+                    ...getRandomQuestions(questionsDatabase.golden, 3),
+                    ...getRandomQuestions(questionsDatabase.underground, 2),
+                    ...getRandomQuestions(questionsDatabase.producers, 2)
+                ];
+                questions = legendQuestions;
+            }
+            
+            // Shuffle questions
+            questions = shuffleArray(questions);
+            
+            // Limit questions based on game mode
+            const questionCount = getQuestionCount();
+            questions = questions.slice(0, questionCount);
+            
+            gameState.questions = questions;
+        }
+        
+        // Get random questions from an array
+        function getRandomQuestions(array, count) {
+            const shuffled = shuffleArray([...array]);
+            return shuffled.slice(0, count);
+        }
+        
+        // Return question count based on game mode
+        function getQuestionCount() {
+            switch(gameState.mode) {
+                case 'quick': return 5;
+                case 'full': return 15;
+                case 'era': case 'legend': return 10;
+                default: return 5;
+            }
+        }
+        
+        // Shuffle array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        // Load current question
+        function loadQuestion() {
+            const question = gameState.questions[gameState.currentQuestionIndex];
+            const questionNumber = gameState.currentQuestionIndex + 1;
+            const totalQuestions = gameState.questions.length;
+            
+            // Update UI elements
+            document.getElementById('current-category').textContent = getCategoryName(gameState.category);
+            document.getElementById('question-number').textContent = `Question ${questionNumber}/${totalQuestions}`;
+            document.getElementById('current-score').textContent = `Score: ${gameState.score.toLocaleString()}`;
+            document.getElementById('question-text').textContent = question.question;
+            
+            // Update progress bar
+            const progressPercent = (questionNumber / totalQuestions) * 100;
+            document.getElementById('game-progress').style.width = `${progressPercent}%`;
+            
+            // Create answer buttons
+            const answersContainer = document.getElementById('answers-container');
+            answersContainer.innerHTML = '';
+            
+            // Shuffle the answers to avoid correct answer always being in same position
+            const shuffledAnswers = [...question.answers];
+            const correctIndex = question.correct;
+            const correctAnswer = shuffledAnswers[correctIndex];
+            
+            shuffleArray(shuffledAnswers);
+            
+            // Find the new index of the correct answer
+            const newCorrectIndex = shuffledAnswers.indexOf(correctAnswer);
+            
+            // Create the answer buttons
+            shuffledAnswers.forEach((answer, index) => {
+                const answerButton = document.createElement('div');
+                answerButton.className = 'answer';
+                answerButton.textContent = answer;
+                answerButton.addEventListener('click', () => {
+                    checkAnswer(answerButton, index === newCorrectIndex);
+                });
+                answersContainer.appendChild(answerButton);
+            });
+        }
+        
+        // Start the timer for current question
+        function startTimer() {
+            // Reset timer bar
+            const timerBar = document.getElementById('timer-bar');
+            timerBar.style.transition = 'none';
+            timerBar.style.width = '100%';
+            
+            // Force reflow to restart animation
+            void timerBar.offsetWidth;
+            
+            // Start timer animation
+            timerBar.style.transition = `width ${gameState.timeLimit}s linear`;
+            timerBar.style.width = '0%';
+            
+            // Clear any existing timer
+            if (gameState.timer) clearTimeout(gameState.timer);
+            
+            // Set timeout for when time runs out
+            gameState.timeRemaining = gameState.timeLimit;
+            gameState.timer = setTimeout(() => {
+                handleTimeOut();
+            }, gameState.timeLimit * 1000);
+        }
+        
+        // Handle time out (no answer selected)
+        function handleTimeOut() {
+            // Find the correct answer
+            const question = gameState.questions[gameState.currentQuestionIndex];
+            const correctAnswerIndex = question.correct;
+            const answers = document.querySelectorAll('.answer');
+            
+            // Highlight the correct answer
+            answers.forEach((answer, index) => {
+                if (index === correctAnswerIndex) {
+                    answer.classList.add('correct');
+                }
+            });
+            
+            // Record as wrong answer
+            gameState.wrongAnswers++;
+            
+            // Show feedback
+            showFeedback(false, question.answers[correctAnswerIndex], question.explanation);
+            
+            // Play wrong sound
+            playSound('wrong');
+        }
+        
+        // Check if answer is correct
+        function checkAnswer(element, isCorrect) {
+            // Clear timer
+            clearTimeout(gameState.timer);
+            
+            // Get the current question
+            const question = gameState.questions[gameState.currentQuestionIndex];
+            
+            // Check if answer is correct
+            if (isCorrect) {
+                // Highlight correct answer
+                element.classList.add('correct');
+                
+                // Calculate points (base points + time bonus)
+                const timeRemaining = calculateTimeRemaining();
+                const timeBonus = Math.floor(timeRemaining * 10);
+                const totalPoints = question.points + timeBonus;
+                
+                // Track if answered with at least 5 seconds remaining (for achievement)
+                if (timeRemaining >= 5) {
+                    gameState.speedAnswers = (gameState.speedAnswers || 0) + 1;
+                }
+                
+                // Update score
+                gameState.score += totalPoints;
+                gameState.correctAnswers++;
+                
+                // Show feedback
+                const feedbackText = `Correct! +${totalPoints} points (${question.points} base + ${timeBonus} time bonus)`;
+                showFeedback(true, question.answers[question.correct], question.explanation);
+                
+                // Play correct sound
+                playSound('correct');
+            } else {
+                // Highlight wrong answer
+                element.classList.add('wrong');
+                
+                // Find and highlight correct answer
+                const answers = document.querySelectorAll('.answer');
+                const correctAnswerIndex = question.correct;
+                
+                answers.forEach((answer, index) => {
+                    if (index === correctAnswerIndex) {
+                        answer.classList.add('correct');
+                    }
+                });
+                
+                gameState.wrongAnswers++;
+                
+                // Show feedback
+                showFeedback(false, question.answers[question.correct], question.explanation);
+                
+                // Play wrong sound
+                playSound('wrong');
+            }
+            
+            // Update score display
+            document.getElementById('current-score').textContent = `Score: ${gameState.score.toLocaleString()}`;
+        }
+        
+        // Show feedback after answering
+        function showFeedback(isCorrect, correctAnswer, explanation) {
+            // Hide question screen
+            document.getElementById('question-screen').classList.add('hidden');
+            
+            // Show feedback screen
+            const feedbackScreen = document.getElementById('feedback-screen');
+            feedbackScreen.classList.remove('hidden');
+            
+            // Set feedback content
+            const feedbackMessage = document.getElementById('feedback-message');
+            feedbackMessage.textContent = isCorrect ? "Correct!" : "Wrong!";
+            feedbackMessage.className = isCorrect ? "feedback-message correct-feedback" : "feedback-message wrong-feedback";
+            
+            document.getElementById('correct-answer').innerHTML = `<strong>Correct Answer:</strong> ${correctAnswer}`;
+            document.getElementById('answer-explanation').innerHTML = `<strong>Explanation:</strong> ${explanation}`;
+        }
+        
+        // Continue to next question after feedback
+        function continueThroughFeedback() {
+            // Hide feedback screen
+            document.getElementById('feedback-screen').classList.add('hidden');
+            
+            // Check if we should show bonus round
+            const shouldShowBonus = Math.random() < 0.3 && gameState.currentQuestionIndex > 0;
+            
+            if (shouldShowBonus) {
+                showBonusRound();
+            } else {
+                // Move to next question or results
+                moveToNextQuestion();
+            }
+        }
+        
+        // Move to the next question or show results if game is over
+        function moveToNextQuestion() {
+            gameState.currentQuestionIndex++;
+            
+            if (gameState.currentQuestionIndex >= gameState.questions.length) {
+                showResults();
+            } else {
+                // Reset and show question screen
+                document.getElementById('question-screen').classList.remove('hidden');
+                loadQuestion();
+                startTimer();
+            }
+        }
+        
+        // Show bonus round
+        function showBonusRound() {
+            // Get a random bonus question
+            const bonusQuestions = questionsDatabase.bonus;
+            const randomIndex = Math.floor(Math.random() * bonusQuestions.length);
+            const bonusQuestion = bonusQuestions[randomIndex];
+            
+            // Set up bonus screen
+            document.getElementById('bonus-question-text').textContent = bonusQuestion.question;
+            document.getElementById('bonus-score').textContent = `Score: ${gameState.score.toLocaleString()}`;
+            document.getElementById('fill-blank-input').value = '';
+            
+            // Show bonus screen
+            document.getElementById('bonus-question-screen').classList.remove('hidden');
+            
+            // Focus on input field
+            document.getElementById('fill-blank-input').focus();
+            
+            // Start timer
+            startBonusTimer();
+            
+            // Store the bonus question for checking
+            gameState.currentBonusQuestion = bonusQuestion;
+            
+            // Play bonus sound
+            playSound('bonus');
+        }
+        
+        // Start timer for bonus question
+        function startBonusTimer() {
+            // Reset timer bar
+            const timerBar = document.getElementById('bonus-timer-bar');
+            timerBar.style.transition = 'none';
+            timerBar.style.width = '100%';
+            
+            // Force reflow
+            void timerBar.offsetWidth;
+            
+            // Start timer animation - bonus questions get more time
+            const bonusTimeLimit = 20; // seconds
+            timerBar.style.transition = `width ${bonusTimeLimit}s linear`;
+            timerBar.style.width = '0%';
+            
+            // Clear any existing timer
+            if (gameState.timer) clearTimeout(gameState.timer);
+            
+            // Set timeout for when time runs out
+            gameState.timer = setTimeout(() => {
+                handleBonusTimeOut();
+            }, bonusTimeLimit * 1000);
+        }
+        
+        // Handle time out for bonus question
+        function handleBonusTimeOut() {
+            const bonusQuestion = gameState.currentBonusQuestion;
+            
+            // Show feedback with correct answer
+            showBonusFeedback(false, bonusQuestion.answer, bonusQuestion.explanation);
+            
+            // Play wrong sound
+            playSound('wrong');
+        }
+        
+        // Check bonus fill-in-the-blank answer
+        function checkFillBlank() {
+            // Clear timer
+            clearTimeout(gameState.timer);
+            
+            const input = document.getElementById('fill-blank-input');
+            const userAnswer = input.value.trim().toLowerCase();
+            const bonusQuestion = gameState.currentBonusQuestion;
+            const correctAnswer = bonusQuestion.answer.toLowerCase();
+            
+            // Check if answer is correct or close enough
+            const isCorrect = userAnswer === correctAnswer || isAnswerCloseEnough(userAnswer, correctAnswer);
+            
+            if (isCorrect) {
+                // Add bonus points
+                gameState.score += bonusQuestion.points;
+                gameState.correctAnswers++;
+                gameState.bonusAnswers++;
+                
+                // Visual feedback
+                input.style.backgroundColor = 'rgba(0, 200, 83, 0.3)';
+                input.style.borderColor = 'var(--correct-color)';
+                
+                // Show feedback
+                showBonusFeedback(true, bonusQuestion.answer, bonusQuestion.explanation);
+                
+                // Play correct sound
+                playSound('correct');
+            } else {
+                // Wrong answer
+                gameState.wrongAnswers++;
+                
+                // Visual feedback
+                input.style.backgroundColor = 'rgba(255, 23, 68, 0.3)';
+                input.style.borderColor = 'var(--wrong-color)';
+                
+                // Show correct answer
+                input.value = bonusQuestion.answer;
+                
+                // Show feedback
+                showBonusFeedback(false, bonusQuestion.answer, bonusQuestion.explanation);
+                
+                // Play wrong sound
+                playSound('wrong');
+            }
+            
+            // Update score display
+            document.getElementById('bonus-score').textContent = `Score: ${gameState.score.toLocaleString()}`;
+        }
+        
+        // Check if the user's answer is close enough to correct (for fill-in-the-blank)
+        function isAnswerCloseEnough(userAnswer, correctAnswer) {
+            // For multi-word answers, check if the main part is correct
+            if (correctAnswer.includes(' ')) {
+                const correctWords = correctAnswer.split(' ');
+                const userWords = userAnswer.split(' ');
+                
+                // Check if the first word or key words match
+                for (let i = 0; i < correctWords.length; i++) {
+                    if (correctWords[i].length > 3 && userAnswer.includes(correctWords[i])) {
+                        return true;
+                    }
+                }
+            }
+            
+            // Calculate similarity (Levenshtein distance)
+            const maxDistance = Math.floor(correctAnswer.length / 3); // Allow 1/3 of characters to be wrong
+            
+            return levenshteinDistance(userAnswer, correctAnswer) <= maxDistance;
+        }
+        
+        // Calculate Levenshtein distance between two strings
+        function levenshteinDistance(a, b) {
+            if (a.length === 0) return b.length;
+            if (b.length === 0) return a.length;
+            
+            const matrix = [];
+            
+            // Initialize matrix
+            for (let i = 0; i <= b.length; i++) {
+                matrix[i] = [i];
+            }
+            
+            for (let j = 0; j <= a.length; j++) {
+                matrix[0][j] = j;
+            }
+            
+            // Fill in the rest of the matrix
+            for (let i = 1; i <= b.length; i++) {
+                for (let j = 1; j <= a.length; j++) {
+                    if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j - 1] + 1, // substitution
+                            matrix[i][j - 1] + 1,     // insertion
+                            matrix[i - 1][j] + 1      // deletion
+                        );
+                    }
+                }
+            }
+            
+            return matrix[b.length][a.length];
+        }
+        
+        // Show feedback for bonus questions
+        function showBonusFeedback(isCorrect, correctAnswer, explanation) {
+            // Hide bonus question screen
+            document.getElementById('bonus-question-screen').classList.add('hidden');
+            
+            // Show feedback screen
+            const feedbackScreen = document.getElementById('feedback-screen');
+            feedbackScreen.classList.remove('hidden');
+            
+            // Set feedback content
+            const feedbackMessage = document.getElementById('feedback-message');
+            feedbackMessage.textContent = isCorrect ? "Bonus Correct! +500 points!" : "Bonus Wrong!";
+            feedbackMessage.className = isCorrect ? "feedback-message correct-feedback" : "feedback-message wrong-feedback";
+            
+            document.getElementById('correct-answer').innerHTML = `<strong>Correct Answer:</strong> ${correctAnswer}`;
+            document.getElementById('answer-explanation').innerHTML = `<strong>Explanation:</strong> ${explanation}`;
+        }
+        
+        // Continue after bonus feedback
+        function continueBonusFeedback() {
+            // Hide feedback screen
+            document.getElementById('feedback-screen').classList.add('hidden');
+            
+            // Continue to next question
+            moveToNextQuestion();
+        }
+        
+        // Calculate remaining time for score bonus
+        function calculateTimeRemaining() {
+            const timerBar = document.getElementById('timer-bar');
+            const timerWidth = parseInt(timerBar.style.width || '0');
+            const timeRemaining = (timerWidth / 100) * gameState.timeLimit;
+            return Math.max(0, timeRemaining);
+        }
+        
+        // Get category display name
+        function getCategoryName(category) {
+            const names = {
+                'oldschool': 'Old School (1985-1995)',
+                'golden': 'Golden Era (1995-2005)',
+                'modern': 'Modern Era (2005-2025)',
+                'underground': 'Underground Classics',
+                'producers': 'Producers & Beats',
+                'culture': 'Hip-Hop Culture',
+                'mixed-eras': 'Era Battle',
+                'legend': 'Legend Mode'
+            };
+            return names[category] || 'Hip-Hop Trivia';
+        }
+        
+        // Show results screen
+        function showResults() {
+            // Calculate end time
+            gameState.endTime = new Date();
+            const gameTime = Math.floor((gameState.endTime - gameState.startTime) / 1000);
+            
+            // Hide question screens
+            document.getElementById('question-screen').classList.add('hidden');
+            document.getElementById('bonus-question-screen').classList.add('hidden');
+            document.getElementById('feedback-screen').classList.add('hidden');
+            
+            // Show results screen
+            document.getElementById('results-screen').classList.remove('hidden');
+            
+            // Update results content
+            document.getElementById('final-score').textContent = gameState.score.toLocaleString();
+            
+            // Set score message
+            const scoreMessage = getScoreMessage(gameState.score);
+            document.getElementById('score-message').textContent = scoreMessage;
+            
+            // Update score details
+            document.getElementById('correct-count').textContent = gameState.correctAnswers;
+            document.getElementById('wrong-count').textContent = gameState.wrongAnswers;
+            document.getElementById('bonus-count').textContent = gameState.bonusAnswers;
+            
+            // Check for achievements
+            checkAchievements();
+            
+            // Check if eligible for prizes
+            const isPrizeEligible = gameState.score >= 5000;
+            const prizeMessageElement = document.getElementById('prize-message');
+            
+            if (isPrizeEligible) {
+                prizeMessageElement.textContent = "You're eligible for this week's prize drawing!";
+                prizeMessageElement.style.color = 'var(--teg-brand-color)';
+            } else {
+                prizeMessageElement.textContent = "Keep practicing to reach prize eligibility (5,000+ points)";
+                prizeMessageElement.style.color = 'var(--text-color)';
+            }
+            
+            // Update leaderboard
+            saveScoreToLeaderboard();
+            
+            // Play game over sound
+            playSound('gameOver');
+        }
+        
+        // Get score message based on score
+        function getScoreMessage(score) {
+            if (score >= 8000) return "Amazing! You're a true Hip-Hop legend!";
+            if (score >= 6000) return "Impressive! Your hip-hop knowledge is fire!";
+            if (score >= 4000) return "Great job! You really know your stuff!";
+            if (score >= 2000) return "Good work! You've got decent hip-hop knowledge.";
+            return "Keep studying your hip-hop history!";
+        }
+        
+        // Check achievements
+        function checkAchievements() {
+            // Add achievement properties if needed
+            if (gameState.correctAnswers === gameState.questions.length) {
+                gameState.categoryPerfect = gameState.category;
+            }
+            
+            // Check each achievement
+            const earnedAchievements = [];
+            
+            achievements.forEach(achievement => {
+                if (achievement.check(gameState)) {
+                    earnedAchievements.push(achievement);
+                }
+            });
+            
+            // Display achievements if any were earned
+            if (earnedAchievements.length > 0) {
+                const achievementsContainer = document.getElementById('achievements-container');
+                const achievementsList = document.getElementById('achievements-list');
+                
+                achievementsContainer.classList.remove('hidden');
+                achievementsList.innerHTML = '';
+                
+                earnedAchievements.forEach(achievement => {
+                    const achievementElement = document.createElement('div');
+                    achievementElement.className = 'achievement';
+                    achievementElement.innerHTML = `
+                        <div class="achievement-icon">${achievement.icon}</div>
+                        <div class="achievement-info">
+                            <div class="achievement-title">${achievement.title}</div>
+                            <div class="achievement-desc">${achievement.description}</div>
+                        </div>
+                    `;
+                    achievementsList.appendChild(achievementElement);
+                    
+                    // Add bonus points for achievements
+                    gameState.score += 500;
+                });
+                
+                // Update final score with achievement bonuses
+                document.getElementById('final-score').textContent = gameState.score.toLocaleString();
+            }
+        }
+        
+        // Save score to leaderboard
+        function saveScoreToLeaderboard() {
+            // Get existing leaderboard
+            let leaderboard = JSON.parse(localStorage.getItem('hipHopTriviaLeaderboard')) || [];
+            
+            // Create new entry
+            const newEntry = {
+                name: gameState.playerName,
+                score: gameState.score,
+                mode: gameState.mode,
+                category: gameState.category,
+                date: new Date().toISOString()
+            };
+            
+            // Add new score
+            leaderboard.push(newEntry);
+            
+            // Sort by score (descending)
+            leaderboard.sort((a, b) => b.score - a.score);
+            
+            // Keep only top 10
+            leaderboard = leaderboard.slice(0, 10);
+            
+            // Save back to localStorage
+            localStorage.setItem('hipHopTriviaLeaderboard', JSON.stringify(leaderboard));
+            
+            // Update displayed leaderboard
+            updateLeaderboardDisplay();
+        }
+        
+        // Load and display leaderboard
+        function loadLeaderboard() {
+            // Get leaderboard data
+            const leaderboard = JSON.parse(localStorage.getItem('hipHopTriviaLeaderboard')) || [];
+            
+            // If empty, add sample data
+            if (leaderboard.length === 0) {
+                const sampleData = [
+                    { name: "MC Knowitall", score: 9500, mode: "full", category: "underground", date: new Date().toISOString() },
+                    { name: "BeatMaster", score: 8750, mode: "legend", category: "producers", date: new Date().toISOString() },
+                    { name: "LyricGenius", score: 8200, mode: "full", category: "golden", date: new Date().toISOString() },
+                    { name: "GoldenEraFan", score: 7950, mode: "era", category: "mixed-eras", date: new Date().toISOString() }
+                ];
+                
+                localStorage.setItem('hipHopTriviaLeaderboard', JSON.stringify(sampleData));
+                updateLeaderboardDisplay(sampleData);
+            } else {
+                updateLeaderboardDisplay(leaderboard);
+            }
+        }
+        
+        // Update the leaderboard display
+        function updateLeaderboardDisplay(leaderboardData) {
+            // Get leaderboard from localStorage if not provided
+            const leaderboard = leaderboardData || JSON.parse(localStorage.getItem('hipHopTriviaLeaderboard')) || [];
+            
+            // Update top scores in header
+            const topScoresContainer = document.getElementById('top-scores-container');
+            topScoresContainer.innerHTML = '';
+            
+            // Display top 4 scores
+            leaderboard.slice(0, 4).forEach(entry => {
+                const scoreCard = document.createElement('div');
+                scoreCard.className = 'score-card';
+                scoreCard.innerHTML = `
+                    <div class="score-name">${entry.name}</div>
+                    <div class="score-value">${entry.score.toLocaleString()}</div>
+                `;
+                topScoresContainer.appendChild(scoreCard);
+            });
+            
+            // Update full leaderboard in modal
+            const leaderboardList = document.getElementById('leaderboard-list');
+            leaderboardList.innerHTML = '';
+            
+            leaderboard.forEach((entry, index) => {
+                const listItem = document.createElement('li');
+                listItem.className = 'leaderboard-item';
+                listItem.innerHTML = `
+                    <div class="leaderboard-rank">${index + 1}</div>
+                    <div class="leaderboard-name">${entry.name}</div>
+                    <div class="leaderboard-score">${entry.score.toLocaleString()}</div>
+                `;
+                leaderboardList.appendChild(listItem);
+            });
+        }
+        
+        // Show leaderboard modal
+        function showLeaderboard() {
+            const modal = document.getElementById('leaderboard-modal');
+            modal.classList.add('active');
+            updateLeaderboardDisplay();
+        }
+        
+        // Close modal
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+        }
+        
+        // Restart game
+        function restartGame() {
+            // Reset game state
+            gameState.mode = null;
+            gameState.category = null;
+            gameState.questions = [];
+            gameState.currentQuestionIndex = 0;
+            gameState.score = 0;
+            gameState.correctAnswers = 0;
+            gameState.wrongAnswers = 0;
+            gameState.bonusAnswers = 0;
+            gameState.startTime = null;
+            gameState.endTime = null;
+            
+            // Show start screen
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+            document.getElementById('screen-title').textContent = `Choose Your Game Mode, ${gameState.playerName}!`;
+        }
+        
+        // Share score on social media
+        function shareScore(platform) {
+            const score = gameState.score;
+            const playerName = gameState.playerName;
+            const message = `${playerName} just scored ${score.toLocaleString()} points in Hip-Hop Head Trivia! Think you can beat it? #HipHopTrivia #TEGReport`;
+            
+            let url = '';
+            
+            switch(platform) {
+                case 'facebook':
+                    url = `https://www.facebook.com/sharer/sharer.php?u=https://teg-report.com/trivia&quote=${encodeURIComponent(message)}`;
+                    break;
+                case 'twitter':
+                    url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=https://teg-report.com/trivia`;
+                    break;
+                case 'instagram':
+                    // Would need app-specific implementation
+                    alert("Instagram sharing available in the mobile app!");
+                    return;
+                case 'linkedin':
+                    url = `https://www.linkedin.com/sharing/share-offsite/?url=https://teg-report.com/trivia&title=${encodeURIComponent('Hip-Hop Trivia Score')}&summary=${encodeURIComponent(message)}`;
+                    break;
+            }
+            
+            if (url) {
+                window.open(url, '_blank');
+            }
+        }
+        
+        // Toggle sound on/off
+        function toggleSound() {
+            gameState.soundEnabled = !gameState.soundEnabled;
+            
+            const soundToggle = document.getElementById('sound-toggle');
+            soundToggle.textContent = gameState.soundEnabled ? '🔊' : '🔇';
+            
+            // Mute/unmute all audio
+            for (const sound in sounds) {
+                sounds[sound].muted = !gameState.soundEnabled;
+            }
+        }
+        
+        // Play sound effect
+        function playSound(soundName) {
+            if (!gameState.soundEnabled) return;
+            
+            const sound = sounds[soundName];
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play().catch(e => {
+                    // Autoplay may be blocked, that's ok
+                    console.log("Audio play prevented:", e);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
